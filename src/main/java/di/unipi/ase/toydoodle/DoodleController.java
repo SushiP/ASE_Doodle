@@ -177,12 +177,16 @@ public class DoodleController {
      * @param vote - the new vote.
      * @return the name of the voter if the vote is successfully update, false otherwise.
      * @throws di.unipi.ase.toydoodle.exceptions.ObjectNotFoundException - if no doodle with input id is found.
+     * @throws di.unipi.ase.toydoodle.exceptions.WrongMethodCallException - the name of the vote and the one into the URL don't match.
      */
     @RequestMapping(value="/doodles/{id}/vote/{name}", method = RequestMethod.POST)
-    public String updateVote(@PathVariable("id") int id, @PathVariable("name") String name, @RequestBody Vote vote) throws ObjectNotFoundException{
+    public String updateVote(@PathVariable("id") int id, @PathVariable("name") String name, @RequestBody Vote vote) throws ObjectNotFoundException, WrongMethodCallException{
         Doodle doodle =  doodles.get(id);
         
         if(doodle == null)  throw new ObjectNotFoundException("Doodle", Integer.toString(id));
+        if(vote.getName().equals(name)) 
+            throw new WrongMethodCallException("POST", "GET", " for inserting a new Vote. If you want to update"
+                    + "a vote, the name on the URL and the one on the vote must be the same.");
         
         return doodle.addVote(vote);
     }
