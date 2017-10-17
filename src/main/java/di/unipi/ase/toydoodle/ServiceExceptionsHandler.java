@@ -5,6 +5,8 @@
  */
 package di.unipi.ase.toydoodle;
 
+import di.unipi.ase.toydoodle.exceptions.ObjectNotFoundException;
+import di.unipi.ase.toydoodle.exceptions.WrongMethodCallException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -33,8 +35,8 @@ public class ServiceExceptionsHandler extends ResponseEntityExceptionHandler{
     
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request){
-        String error = "The URL is not correct. Check URI to retrieve the correct URL.";
-        return new ResponseEntity<>(new ServiceError(HttpStatus.NOT_FOUND, error, ex), HttpStatus.NOT_FOUND);
+        String error = "This method is not supported by this URL.";
+        return new ResponseEntity<>(new ServiceError(HttpStatus.BAD_REQUEST, error, ex), HttpStatus.BAD_REQUEST);
     }
     
     @Override
@@ -47,5 +49,11 @@ public class ServiceExceptionsHandler extends ResponseEntityExceptionHandler{
     protected ResponseEntity<Object> handleObjectNotFoundException(ObjectNotFoundException ex){
         String error = ex.getMessage();
         return new ResponseEntity<>(new ServiceError(HttpStatus.PRECONDITION_FAILED, error, ex), HttpStatus.PRECONDITION_FAILED);
+    }
+    
+    @ExceptionHandler(value = {WrongMethodCallException.class})
+    protected ResponseEntity<Object> handleWrongMethodCallException(ObjectNotFoundException ex){
+        String error = ex.getMessage();
+        return new ResponseEntity<>(new ServiceError(HttpStatus.BAD_REQUEST, error, ex), HttpStatus.BAD_REQUEST);
     }
 }

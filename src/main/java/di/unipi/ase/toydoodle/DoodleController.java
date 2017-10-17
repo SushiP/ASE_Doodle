@@ -5,6 +5,8 @@
  */
 package di.unipi.ase.toydoodle;
 
+import di.unipi.ase.toydoodle.exceptions.ObjectNotFoundException;
+import di.unipi.ase.toydoodle.exceptions.WrongMethodCallException;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -121,12 +123,18 @@ public class DoodleController {
      * @param id - the id of the doodle to which add the vote.
      * @param vote - the vote to add.
      * @return the name of the voter if the operation succeeds, null otherwise.
-     * @throws di.unipi.ase.toydoodle.ObjectNotFoundException - if no doodle with input id is found.
+     * @throws di.unipi.ase.toydoodle.exceptions.ObjectNotFoundException - if no doodle with input id is found.
+     * @throws di.unipi.ase.toydoodle.exceptions.WrongMethodCallException - if a vote with the same participant already exists.
      */
     @RequestMapping(value="/doodles/{id}/vote", method = RequestMethod.PUT)
-    public String addVote(@PathVariable("id") int id, @RequestBody Vote vote) throws ObjectNotFoundException{
+    public String addVote(@PathVariable("id") int id, @Valid @RequestBody Vote vote) throws ObjectNotFoundException, WrongMethodCallException{
         Doodle doodle =  doodles.get(id);
+        
         if(doodle == null)  throw new ObjectNotFoundException("Doodle", Integer.toString(id));
+        
+        if(doodle.findPreviousVote(vote.getName()) != null)
+            throw new WrongMethodCallException("PUT", "POST", "for updating vote.");
+        
         return doodle.addVote(vote);
     }
     
@@ -135,12 +143,14 @@ public class DoodleController {
      * @param id - the id of the doodle.
      * @param name - the name of the participant.
      * @return the option voted by the input participant.
-     * @throws di.unipi.ase.toydoodle.ObjectNotFoundException - if no doodle with input id is found.
+     * @throws di.unipi.ase.toydoodle.exceptions.ObjectNotFoundException - if no doodle with input id is found.
      */
     @RequestMapping(value="/doodles/{id}/vote/{name}", method = RequestMethod.GET)
     public String getVotedOption(@PathVariable("id") int id, @PathVariable("name") String name) throws ObjectNotFoundException{
         Doodle doodle =  doodles.get(id);
+        
         if(doodle == null)  throw new ObjectNotFoundException("Doodle", Integer.toString(id));
+        
         return doodle.findPreviousVote(name);
     }
     
@@ -149,12 +159,14 @@ public class DoodleController {
      * @param id - the doodle from which delete the vote.
      * @param name - the name of the participant of which vote have to be deleted.
      * @return true if all go right, false otherwise.
-     * @throws di.unipi.ase.toydoodle.ObjectNotFoundException - if no doodle with input id is found.
+     * @throws di.unipi.ase.toydoodle.exceptions.ObjectNotFoundException - if no doodle with input id is found.
      */
     @RequestMapping(value="/doodles/{id}/vote/{name}", method = RequestMethod.DELETE)
     public boolean deleteVote(@PathVariable("id") int id, @PathVariable("name") String name) throws ObjectNotFoundException{
         Doodle doodle =  doodles.get(id);
+        
         if(doodle == null)  throw new ObjectNotFoundException("Doodle", Integer.toString(id));
+        
         return doodle.removeVote(name);
     }
     
@@ -164,12 +176,14 @@ public class DoodleController {
      * @param name - the name of the participant of which vote have to be update.
      * @param vote - the new vote.
      * @return the name of the voter if the vote is successfully update, false otherwise.
-     * @throws di.unipi.ase.toydoodle.ObjectNotFoundException - if no doodle with input id is found.
+     * @throws di.unipi.ase.toydoodle.exceptions.ObjectNotFoundException - if no doodle with input id is found.
      */
     @RequestMapping(value="/doodles/{id}/vote/{name}", method = RequestMethod.POST)
     public String updateVote(@PathVariable("id") int id, @PathVariable("name") String name, @RequestBody Vote vote) throws ObjectNotFoundException{
         Doodle doodle =  doodles.get(id);
+        
         if(doodle == null)  throw new ObjectNotFoundException("Doodle", Integer.toString(id));
+        
         return doodle.addVote(vote);
     }
 }
