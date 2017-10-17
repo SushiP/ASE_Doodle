@@ -1,7 +1,11 @@
 package di.unipi.ase.toydoodle;
 
+import javax.validation.constraints.NotNull;
+
 public class Vote {
+    @NotNull
     private String name;
+    @NotNull
     private String option;
 
     public Vote(){ }

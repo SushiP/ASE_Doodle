@@ -3,9 +3,12 @@ package di.unipi.ase.toydoodle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 
 public class Doodle {
+    @NotNull
     private String title;
+    @NotNull
     private ArrayList<String> options;
     private HashMap<String, ArrayList<String>> votes;
 
@@ -51,8 +54,8 @@ public class Doodle {
             if (hasAlreadyVoted(vote)) {
                 removeVote(voter);
             }
-            votes.get(vote.getOption()).add(voter);
-            result = vote.getName();
+            if(votes.get(vote.getOption()).add(voter))
+                result = vote.getName();
         }
 
         return result;
