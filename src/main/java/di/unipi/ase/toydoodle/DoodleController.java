@@ -184,7 +184,7 @@ public class DoodleController {
         Doodle doodle =  doodles.get(id);
         
         if(doodle == null)  throw new ObjectNotFoundException("Doodle", Integer.toString(id));
-        if(vote.getName().equals(name)) 
+        if(!vote.getName().equals(name)) 
             throw new WrongMethodCallException("POST", "GET", " for inserting a new Vote. If you want to update"
                     + "a vote, the name on the URL and the one on the vote must be the same.");
         
