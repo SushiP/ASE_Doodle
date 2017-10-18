@@ -185,8 +185,11 @@ public class DoodleController {
         
         if(doodle == null)  throw new ObjectNotFoundException("Doodle", Integer.toString(id));
         if(!vote.getName().equals(name)) 
-            throw new WrongMethodCallException("POST", "GET", " for inserting a new Vote. If you want to update"
+            throw new WrongMethodCallException("POST", "PUT on /doodle/{id}/vote", " for inserting a new Vote. If you want to update"
                     + "a vote, the name on the URL and the one on the vote must be the same.");
+        
+        if(doodle.hasAlreadyVoted(vote.getName()))    
+            throw new WrongMethodCallException("POST", "PUT on /doodle/{id}/vote", " for inserting a new Vote.");
         
         return doodle.addVote(vote);
     }

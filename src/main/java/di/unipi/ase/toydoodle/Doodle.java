@@ -73,7 +73,7 @@ public class Doodle {
         return previouslyChosenOption != null;
     }
 
-    private boolean hasAlreadyVoted(String name){
+    public boolean hasAlreadyVoted(String name){
         String previouslyChosenOption = findPreviousVote(name);
         return previouslyChosenOption != null;
     }
