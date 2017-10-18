@@ -188,7 +188,7 @@ public class DoodleController {
             throw new WrongMethodCallException("POST", "PUT on /doodle/{id}/vote", " for inserting a new Vote. If you want to update"
                     + "a vote, the name on the URL and the one on the vote must be the same.");
         
-        if(doodle.hasAlreadyVoted(vote.getName()))    
+        if(!doodle.hasAlreadyVoted(vote.getName()))    
             throw new WrongMethodCallException("POST", "PUT on /doodle/{id}/vote", " for inserting a new Vote.");
         
         return doodle.addVote(vote);
