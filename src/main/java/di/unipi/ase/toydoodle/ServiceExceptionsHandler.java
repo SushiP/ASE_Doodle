@@ -52,7 +52,7 @@ public class ServiceExceptionsHandler extends ResponseEntityExceptionHandler{
     }
     
     @ExceptionHandler(value = {WrongMethodCallException.class})
-    protected ResponseEntity<Object> handleWrongMethodCallException(ObjectNotFoundException ex){
+    protected ResponseEntity<Object> handleWrongMethodCallException(WrongMethodCallException ex){
         String error = ex.getMessage();
         return new ResponseEntity<>(new ServiceError(HttpStatus.BAD_REQUEST, error, ex), HttpStatus.BAD_REQUEST);
     }

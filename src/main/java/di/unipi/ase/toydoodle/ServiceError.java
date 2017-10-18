@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
  *
  * @author Sushi
  */
-//@JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.CUSTOM, property = "error", visible = true)
 public class ServiceError {
     @JsonProperty("statusMessage")
     private HttpStatus status;
