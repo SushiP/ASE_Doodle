@@ -18,15 +18,15 @@ import org.springframework.http.HttpStatus;
  * @author Sushi
  */
 public class ServiceError {
-    @JsonProperty("statusMessage")
+    @JsonProperty("statusMessage") //HTTP status message.
     private HttpStatus status;
-    @JsonProperty("status")
+    @JsonProperty("status") //HTTP status code.
     private int statusCode;
-    @JsonProperty("message")
+    @JsonProperty("message") //Could be read to understand the problem.
     private String message;
-    @JsonProperty("debugMessage")
+    @JsonProperty("debugMessage") //Could be needed by programmer.
     private String debugMessage;
-    @JsonProperty("timestamp")
+    @JsonProperty("timestamp") //Timestamp in readable format.
     private String timestamp;
     
     ServiceError(HttpStatus status, String message, Throwable ex){

@@ -27,30 +27,35 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class ServiceExceptionsHandler extends ResponseEntityExceptionHandler{
+    //Handle the exception for the malformed JSON.
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request){
         String error = "Malformed JSON request";
         return new ResponseEntity<>(new ServiceError(HttpStatus.BAD_REQUEST, error, ex), HttpStatus.BAD_REQUEST);
     }
     
+    //Handle the exception for the call to a not supported http method.
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request){
         String error = "This method is not supported by this URL.";
         return new ResponseEntity<>(new ServiceError(HttpStatus.BAD_REQUEST, error, ex), HttpStatus.BAD_REQUEST);
     }
     
+    //Handle the exception for the validation of JSON object.
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request){
         String error = "Argument is not valid: be sure that the object is well formed.";
         return new ResponseEntity<>(new ServiceError(HttpStatus.NOT_ACCEPTABLE, error, ex), HttpStatus.NOT_ACCEPTABLE);
     }
     
+    //Handle the exception for the object that had not been found.
     @ExceptionHandler(value = {ObjectNotFoundException.class})
     protected ResponseEntity<Object> handleObjectNotFoundException(ObjectNotFoundException ex){
         String error = ex.getMessage();
         return new ResponseEntity<>(new ServiceError(HttpStatus.PRECONDITION_FAILED, error, ex), HttpStatus.PRECONDITION_FAILED);
     }
     
+    //Handle the exception for the call to the wrong http method.
     @ExceptionHandler(value = {WrongMethodCallException.class})
     protected ResponseEntity<Object> handleWrongMethodCallException(WrongMethodCallException ex){
         String error = ex.getMessage();
